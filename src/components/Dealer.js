@@ -2,24 +2,17 @@ import React from "react";
 import Cardview from "./Cardview";
 
 class Player extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      DealerSum: null,
-      dealerCards: []
+      DealerSum: this.props.DealerSum,
+      dealerCards: this.props.dealerCards
     };
-  }
-  componentDidMount() {
-    console.log(this.props);
-    this.setState({
-      DealerSum: this.props.dealerSum,
-      dealerCards: [...this.props.dealerCards, ...this.state.dealerCards]
-    });
   }
 
   DealerCards = () => {
-    let cards = this.props.dealerCards.map((item, i) => {
-      return <Cardview key={i} cardURL={item.image} />;
+    let cards = this.state.dealerCards.map((item, i) => {
+      return <Cardview key={i ^ 2} cardURL={item.image} />;
     });
     return <div>{cards}</div>;
   };
@@ -37,7 +30,7 @@ class Player extends React.Component {
               alt="back card"
             />
           </div>
-          <h3>{this.props.DealerSum}</h3>
+          <h3>{this.state.DealerSum}</h3>
         </div>
       </div>
     );

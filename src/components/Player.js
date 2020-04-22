@@ -2,22 +2,16 @@ import React from "react";
 import Cardview from "./Cardview";
 
 class Player extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      playerSum: null,
-      playerCards: []
+      playerSum: this.props.playerSum,
+      playerCards: this.props.playerCards
     };
-  }
-  componentDidMount() {
-    this.setState({
-      playerSum: this.props.dealerSum,
-      playerCards: [...this.props.playerCards, ...this.state.playerCards]
-    });
   }
 
   viewPlayer = () => {
-    let cards = this.props.playerCards.map((item, i) => {
+    let cards = this.state.playerCards.map((item, i) => {
       return <Cardview key={i} cardURL={item.image} />;
     });
 
@@ -28,6 +22,7 @@ class Player extends React.Component {
     );
   };
   render() {
+    console.log(this.state.playerSum);
     return (
       <div>
         <h1> Player </h1>
@@ -35,7 +30,7 @@ class Player extends React.Component {
           <div className="fullCards">
             <div>{this.viewPlayer()}</div>
           </div>
-          <h3>{this.props.playerSum}</h3>
+          <h3>{this.state.playerSum}</h3>
         </div>
       </div>
     );

@@ -8,19 +8,6 @@ class Board extends React.Component {
         <GameAlgo amount={2} />
       </div>
     );
-    // return (
-    //   <div className="tableBox">
-    //     <div>
-    //       <Dealer />
-    //     </div>
-    //     <div>
-    //       <Player />
-    //     </div>
-    //     <div>
-    //       <Options />
-    //     </div>
-    //   </div>
-    // );
   }
 }
 

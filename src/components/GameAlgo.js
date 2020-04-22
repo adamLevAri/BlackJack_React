@@ -9,6 +9,7 @@ class GameAlgo extends React.Component {
   constructor() {
     super();
     this.state = {
+      isLoad: true,
       DealerSum: null,
       playerSum: null,
       playerCards: [],
@@ -16,9 +17,13 @@ class GameAlgo extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.setState({ isLoad: true });
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
+    this.setState({
+      isload: false
+    });
   }
 
   fetchCards(type, cardsAmount) {
@@ -30,6 +35,7 @@ class GameAlgo extends React.Component {
         } else {
           //dealer
           this.dealerDeck(data);
+          this.setState({ isLoad: false });
         }
       });
   }
@@ -84,7 +90,6 @@ class GameAlgo extends React.Component {
     let cards = this.state.playerCards.map((item, i) => {
       return <Cardview key={i} cardURL={item.image} />;
     });
-
     return (
       <div>
         <div>{cards}</div>
@@ -106,30 +111,38 @@ class GameAlgo extends React.Component {
     );
   };
 
-  getOptions = () => {
-    return <Options />;
-  };
+  hitCard() {
+    console.log("hitHit");
+  }
+
+  stand() {
+    console.log("stand");
+  }
 
   render() {
-    return (
-      <div className="tableBox">
-        <div>
-          <Dealer
-            dealerCards={this.state.dealerCards}
-            DealerSum={this.state.DealerSum}
-          />
+    if (this.state.isLoad === false) {
+      return (
+        <div className="tableBox">
+          <div>
+            <Dealer
+              dealerCards={this.state.dealerCards}
+              DealerSum={this.state.DealerSum}
+            />
+          </div>
+          <div>
+            <Player
+              playerCards={this.state.playerCards}
+              playerSum={this.state.playerSum}
+            />
+          </div>
+          <div>
+            <Options stand={() => this.stand()} hit={() => this.hitCard()} />
+          </div>
         </div>
-        <div>
-          <Player
-            playerCards={this.state.playerCards}
-            playerSum={this.state.playerSum}
-          />
-        </div>
-        <div>
-          <Options />
-        </div>
-      </div>
-    );
+      );
+    } else {
+      return <h1>Loading data....</h1>;
+    }
   }
 }
 

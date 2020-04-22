@@ -33,7 +33,7 @@ img.cardBox {
   border-radius: 17px;
   height: auto;
   width: auto;
-  background-image: url(/img/deckBackground.jpg);
+  background-image: url(img/deckBackground.jpg);
   background-size: 100%;
   background-repeat: no-repeat;
   background-size: cover;
