@@ -37,7 +37,7 @@ class Player extends React.Component {
               alt="back card"
             />
           </div>
-          <h3>{this.props.dealerSum}</h3>
+          <h3>{this.props.DealerSum}</h3>
         </div>
       </div>
     );
