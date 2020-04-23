@@ -10,7 +10,7 @@ class Options extends React.Component {
         </button>
         <button onClick={this.props.stand} className="optionButton">
           {" "}
-          Stay{" "}
+          Stand{" "}
         </button>
       </div>
     );

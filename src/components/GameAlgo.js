@@ -1,6 +1,5 @@
 import React from "react";
 
-import Cardview from "./Cardview";
 import Options from "./Options";
 import Dealer from "./Dealer";
 import Player from "./Player";
@@ -18,12 +17,12 @@ class GameAlgo extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ isLoad: true });
+    // this.setState({ isLoad: true });
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
-    this.setState({
-      isload: false
-    });
+    // this.setState({
+    //   isload: false
+    // });
   }
 
   fetchCards(type, cardsAmount) {
@@ -128,7 +127,6 @@ class GameAlgo extends React.Component {
   }
 
   render() {
-    console.log(this.state.playerCards);
     if (this.state.isLoad === false) {
       return (
         <div className="tableBox">
