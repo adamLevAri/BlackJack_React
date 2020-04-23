@@ -41,8 +41,8 @@ class Player extends React.Component {
           <div className="fullCards">
             <div>{this.viewPlayer()}</div>
           </div>
-          <h3>{this.props.playerSum}</h3>
         </div>
+        <h3>{this.props.playerSum}</h3>
       </div>
     );
   }
