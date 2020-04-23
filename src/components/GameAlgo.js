@@ -27,6 +27,7 @@ class GameAlgo extends React.Component {
   }
 
   fetchCards(type, cardsAmount) {
+    console.log(cardsAmount, this.state.isLoad);
     fetch(`https://deckofcardsapi.com/api/deck/new/draw/?count=${cardsAmount}`)
       .then(response => response.json())
       .then(data => {
@@ -49,6 +50,7 @@ class GameAlgo extends React.Component {
     this.setState({
       playerCards: [...this.state.playerCards, ...NewCards.cards]
     });
+
     this.countSum("player");
   }
 
@@ -85,34 +87,40 @@ class GameAlgo extends React.Component {
     //need to check the ACE value
     return 10;
   }
-  viewPlayer = () => {
-    console.log(this.props);
-    let cards = this.state.playerCards.map((item, i) => {
-      return <Cardview key={i} cardURL={item.image} />;
-    });
-    return (
-      <div>
-        <div>{cards}</div>
-        <h3>{this.state.playerSum}</h3>
-      </div>
-    );
-  };
+  // viewPlayer = () => {
+  //   let cards = this.state.playerCards.map((item, i) => {
+  //     return <Cardview key={i} cardURL={item.image} />;
+  //   });
+  //   return (
+  //     <div>
+  //       <div>{cards}</div>
+  //       <h3>{this.state.playerSum}</h3>
+  //     </div>
+  //   );
+  // };
 
-  DealerCards = () => {
-    let cards = this.state.dealerCards.map((item, i) => {
-      return <Cardview key={i} cardURL={item.image} />;
-    });
+  // DealerCards = () => {
+  //   let cards = this.state.dealerCards.map((item, i) => {
+  //     return <Cardview key={i} cardURL={item.image} />;
+  //   });
 
-    return (
-      <div>
-        <div>{cards}</div>
-        <h3>{this.state.DealerSum}</h3>
-      </div>
-    );
-  };
+  //   return (
+  //     <div>
+  //       <div>{cards}</div>
+  //       <h3>{this.state.DealerSum}</h3>
+  //     </div>
+  //   );
+  // };
+
+  checkval() {
+    return this.state.playerSum <= 21;
+  }
 
   hitCard() {
-    console.log("hitHit");
+    console.log("player requested hit");
+    if (this.checkval()) {
+      this.fetchCards("player", 1);
+    } else console.log("player lost");
   }
 
   stand() {
@@ -120,6 +128,7 @@ class GameAlgo extends React.Component {
   }
 
   render() {
+    console.log(this.state.playerCards);
     if (this.state.isLoad === false) {
       return (
         <div className="tableBox">
