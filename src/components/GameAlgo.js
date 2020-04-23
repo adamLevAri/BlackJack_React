@@ -3,11 +3,13 @@ import React from "react";
 import Options from "./Options";
 import Dealer from "./Dealer";
 import Player from "./Player";
+import Board from "./Board";
 
 class GameAlgo extends React.Component {
   constructor() {
     super();
     this.state = {
+      endGame: "none",
       isLoad: true,
       DealerSum: null,
       playerSum: null,
@@ -26,7 +28,7 @@ class GameAlgo extends React.Component {
   }
 
   fetchCards(type, cardsAmount) {
-    console.log(cardsAmount, this.state.isLoad);
+    //console.log(cardsAmount, this.state.isLoad);
     fetch(`https://deckofcardsapi.com/api/deck/new/draw/?count=${cardsAmount}`)
       .then(response => response.json())
       .then(data => {
@@ -120,7 +122,9 @@ class GameAlgo extends React.Component {
       this.fetchCards("player", 1);
     } else {
       console.log("player lost");
-      return <link to={`/`} />;
+      this.setState({
+        endGame: "true"
+      });
     }
   }
 
@@ -128,27 +132,40 @@ class GameAlgo extends React.Component {
     console.log("stand");
   }
 
+  restartGame() {
+    console.log("restart game");
+    //need to see how to display the loosing last card before restarting game
+    return (
+      <div>
+        <Board />
+      </div>
+    );
+  }
   render() {
     if (this.state.isLoad === false) {
-      return (
-        <div className="tableBox">
-          <div>
-            <Dealer
-              dealerCards={this.state.dealerCards}
-              DealerSum={this.state.DealerSum}
-            />
+      if (this.checkval() === false) {
+        return this.restartGame();
+      } else {
+        return (
+          <div className="tableBox">
+            <div>
+              <Dealer
+                dealerCards={this.state.dealerCards}
+                DealerSum={this.state.DealerSum}
+              />
+            </div>
+            <div>
+              <Player
+                playerCards={this.state.playerCards}
+                playerSum={this.state.playerSum}
+              />
+            </div>
+            <div>
+              <Options stand={() => this.stand()} hit={() => this.hitCard()} />
+            </div>
           </div>
-          <div>
-            <Player
-              playerCards={this.state.playerCards}
-              playerSum={this.state.playerSum}
-            />
-          </div>
-          <div>
-            <Options stand={() => this.stand()} hit={() => this.hitCard()} />
-          </div>
-        </div>
-      );
+        );
+      }
     } else {
       return <h1>Loading data....</h1>;
     }
