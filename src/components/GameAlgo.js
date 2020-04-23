@@ -32,9 +32,11 @@ class GameAlgo extends React.Component {
       .then(data => {
         if (type === "player") {
           this.playerDeck(data);
+          this.countSum("player");
         } else {
           //dealer
           this.dealerDeck(data);
+          this.countSum("dealer");
           this.setState({ isLoad: false });
         }
       });
@@ -43,14 +45,11 @@ class GameAlgo extends React.Component {
     this.setState({
       dealerCards: [...this.state.dealerCards, ...NewCards.cards]
     });
-    this.countSum("dealer");
   }
   playerDeck(NewCards) {
     this.setState({
       playerCards: [...this.state.playerCards, ...NewCards.cards]
     });
-
-    this.countSum("player");
   }
 
   countSum(type) {
@@ -119,7 +118,10 @@ class GameAlgo extends React.Component {
     console.log("player requested hit");
     if (this.checkval()) {
       this.fetchCards("player", 1);
-    } else console.log("player lost");
+    } else {
+      console.log("player lost");
+      return <link to={`/`} />;
+    }
   }
 
   stand() {

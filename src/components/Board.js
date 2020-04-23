@@ -4,7 +4,7 @@ import GameAlgo from "./GameAlgo";
 class Board extends React.Component {
   render() {
     return (
-      <div>
+      <div className="App">
         <GameAlgo amount={2} />
       </div>
     );
