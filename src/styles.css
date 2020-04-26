@@ -70,7 +70,7 @@ img.loading {
 }
 
 button.optionButton {
-  margin: 1.5em 0.5em;
+  margin: 1em 0.5em;
   background: linear-gradient(#38aa25, #063905);
   border: 5px solid #f3aa1d;
   border-radius: 1000px;

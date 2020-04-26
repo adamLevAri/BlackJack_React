@@ -11,8 +11,9 @@ class GameAlgo extends React.Component {
     this.state = {
       endGame: "none",
       isLoad: true,
+      playerFinish: false,
       DealerSum: null,
-      playerSum: null,
+      playerSum: 0,
       playerCards: [],
       dealerCards: []
     };
@@ -22,13 +23,14 @@ class GameAlgo extends React.Component {
     // this.setState({ isLoad: true });
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
-  }
+    }
 
-  fetchCards(type, cardsAmount) {
+  fetchCards(cardHolder, cardsAmount) {
     fetch(`https://deckofcardsapi.com/api/deck/new/draw/?count=${cardsAmount}`)
       .then(response => response.json())
       .then(data => {
-        if (type === "player") {
+        if (cardHolder === "player") {
+          //initialize playerCards
           this.playerDeck(data);
           this.countSum("player");
         } else {
@@ -45,8 +47,9 @@ class GameAlgo extends React.Component {
     });
   }
   playerDeck(NewCards) {
+    //return: player API obj
     this.setState({
-      playerCards: [...this.state.playerCards, ...NewCards.cards]
+     playerCards: [...this.state.playerCards, ...NewCards.cards]
     });
   }
 
@@ -69,7 +72,7 @@ class GameAlgo extends React.Component {
     if (type === "player") {
       this.setState({
         playerSum: sum
-      });
+      })
     } else {
       this.setState({
         DealerSum: sum
@@ -83,40 +86,10 @@ class GameAlgo extends React.Component {
     //need to check the ACE value
     return 10;
   }
-  // viewPlayer = () => {
-  //   let cards = this.state.playerCards.map((item, i) => {
-  //     return <Cardview key={i} cardURL={item.image} />;
-  //   });
-  //   return (
-  //     <div>
-  //       <div>{cards}</div>
-  //       <h3>{this.state.playerSum}</h3>
-  //     </div>
-  //   );
-  // };
-
-  // DealerCards = () => {
-  //   let cards = this.state.dealerCards.map((item, i) => {
-  //     return <Cardview key={i} cardURL={item.image} />;
-  //   });
-
-  //   return (
-  //     <div>
-  //       <div>{cards}</div>
-  //       <h3>{this.state.DealerSum}</h3>
-  //     </div>
-  //   );
-  // };
 
   checkval() {
-    return this.state.playerSum <= 21;
-  }
-
-  hitCard() {
-    console.log("player requested hit");
-    if (this.checkval()) {
-      this.fetchCards("player", 1);
-    } else {
+    this.fetchCards("player", 1);
+    if (this.state.playerSum > 21){
       console.log("player lost");
       this.setState({
         endGame: "true"
@@ -124,24 +97,25 @@ class GameAlgo extends React.Component {
     }
   }
 
+  hitCard() {
+    console.log("player requested hit");
+    this.checkval();
+  }
+
   stand() {
-    console.log("stand");
+    console.log("player stand");
+    this.setState({
+      playerFinish: true
+    });
   }
 
   restartGame() {
     console.log("restart game");
     //TODO: display the loosing last card before restarting game
-    return (
-      <div>
-        <Board />
-      </div>
-    );
+    return <Board />
   }
   render() {
-    if (this.state.isLoad === false) {
-      if (this.checkval() === false) {
-        return this.restartGame();
-      } else {
+    if (!this.state.isLoad) {
         return (
           <div className="tableBox">
             <div>
@@ -157,17 +131,20 @@ class GameAlgo extends React.Component {
               />
             </div>
             <div>
-              <Options stand={() => this.stand()} hit={() => this.hitCard()} />
+              <Options 
+                stand={() => this.stand()}
+                hit={() => this.hitCard()} 
+                playerFinish={this.state.playerFinish}
+                />
             </div>
           </div>
         );
-      }
-    } else {
+      } else {
       return (
-        <div >
-          <img className="loading" src="img/loadingGif.gif" alt="loading..."/>
-          </div>
-        )
+        <div>
+          <img className="loading" src="img/loadingGif.gif" alt="loading..." />
+        </div>
+      );
     }
   }
 }
