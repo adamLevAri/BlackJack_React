@@ -25,7 +25,7 @@ class Player extends React.Component {
 
   viewPlayer = () => {
     let cards = this.props.playerCards.map((item, i) => {
-      return <Cardview key={i} cardURL={item.image} />;
+      return <Cardview type="Player" key={i} cardURL={item.image} />;
     });
     return (
       <div>

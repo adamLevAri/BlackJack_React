@@ -22,13 +22,9 @@ class GameAlgo extends React.Component {
     // this.setState({ isLoad: true });
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
-    // this.setState({
-    //   isload: false
-    // });
   }
 
   fetchCards(type, cardsAmount) {
-    //console.log(cardsAmount, this.state.isLoad);
     fetch(`https://deckofcardsapi.com/api/deck/new/draw/?count=${cardsAmount}`)
       .then(response => response.json())
       .then(data => {
@@ -134,7 +130,7 @@ class GameAlgo extends React.Component {
 
   restartGame() {
     console.log("restart game");
-    //need to see how to display the loosing last card before restarting game
+    //TODO: display the loosing last card before restarting game
     return (
       <div>
         <Board />
@@ -167,7 +163,11 @@ class GameAlgo extends React.Component {
         );
       }
     } else {
-      return <h1>Loading data....</h1>;
+      return (
+        <div >
+          <img className="loading" src="img/loadingGif.gif" alt="loading..."/>
+          </div>
+        )
     }
   }
 }

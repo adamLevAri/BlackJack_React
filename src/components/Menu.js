@@ -1,21 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-class Board extends React.Component {
+class Menu extends React.Component {
   render() {
     return (
-      <div
-        className="tableBox"
-        style={{
-          width: `100%`,
-          height: `100%`
-        }}
-      >
-        <div className="App">
+      <div className="App">
+        <div className="tableBox">
           <h1>BlackJack</h1>
-          <Link to="/board">
+          <Link to="/Board">
             <div>
-              <h1>Press to play</h1>
+              <button className="optionButton">Play</button>
             </div>
           </Link>
         </div>
@@ -24,4 +18,4 @@ class Board extends React.Component {
   }
 }
 
-export default Board;
+export default Menu;

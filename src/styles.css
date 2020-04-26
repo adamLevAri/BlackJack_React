@@ -28,17 +28,37 @@ img.cardBox {
   display: inline-flex;
 }
 
+.tableBoxMenu {
+  position: absolute;
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  margin-top: 56px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 23px;
+}
+
 .tableBox {
   border-width: 5px;
   border-style: solid;
   border-color: white;
   border-radius: 17px;
   height: auto;
-  width: auto;
+  width: 60%;
+  min-width: 400px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
   background-image: url(img/deckBackground.jpg);
-  background-size: 100%;
-  background-repeat: no-repeat;
+  background-repeat: non-repeat;
   background-size: cover;
+}
+
+img.loading {
+  width: 20%;
+  margin-left: auto;
+  margin-left: auto;
 }
 
 .playerOptionBox {
