@@ -13,7 +13,7 @@ class Options extends React.Component {
           {" "}
           Stand{" "}
         </button>
-        <button disabled={this.props.playerFinish} onClick={this.props.stand} className="optionButton">
+        <button disabled={this.props.playerFinish} onClick={this.props.render} className="optionButton">
           {" "}
           Split{" "}
         </button>

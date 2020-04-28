@@ -1,5 +1,4 @@
 import React from "react";
-
 import Options from "./Options";
 import Dealer from "./Dealer";
 import Player from "./Player";
@@ -9,7 +8,6 @@ class GameAlgo extends React.Component {
   constructor() {
     super();
     this.state = {
-      endGame: "none",
       isLoad: true,
       playerFinish: false,
       DealerSum: null,
@@ -17,13 +15,14 @@ class GameAlgo extends React.Component {
       playerCards: [],
       dealerCards: []
     };
+    this.restartGame = this.restartGame.bind(this);
   }
 
   componentDidMount() {
     // this.setState({ isLoad: true });
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
-    }
+  }
 
   fetchCards(cardHolder, cardsAmount) {
     fetch(`https://deckofcardsapi.com/api/deck/new/draw/?count=${cardsAmount}`)
@@ -42,6 +41,7 @@ class GameAlgo extends React.Component {
       });
   }
   dealerDeck(NewCards) {
+    //return: dealer API obj
     this.setState({
       dealerCards: [...this.state.dealerCards, ...NewCards.cards]
     });
@@ -49,7 +49,7 @@ class GameAlgo extends React.Component {
   playerDeck(NewCards) {
     //return: player API obj
     this.setState({
-     playerCards: [...this.state.playerCards, ...NewCards.cards]
+      playerCards: [...this.state.playerCards, ...NewCards.cards]
     });
   }
 
@@ -70,9 +70,20 @@ class GameAlgo extends React.Component {
     }
 
     if (type === "player") {
-      this.setState({
-        playerSum: sum
-      })
+      this.setState(
+        {
+          playerSum: sum
+        },
+        () => {
+          console.log(this.state.playerSum);
+          if (this.state.playerSum > 21) {
+            this.restartGame();
+          } else if (this.state.playerSum === 21) {
+          } else {
+            console.log("keep playing");
+          }
+        }
+      );
     } else {
       this.setState({
         DealerSum: sum
@@ -87,19 +98,9 @@ class GameAlgo extends React.Component {
     return 10;
   }
 
-  checkval() {
-    this.fetchCards("player", 1);
-    if (this.state.playerSum > 21){
-      console.log("player lost");
-      this.setState({
-        endGame: "true"
-      });
-    }
-  }
-
   hitCard() {
     console.log("player requested hit");
-    this.checkval();
+    this.fetchCards("player", 1);
   }
 
   stand() {
@@ -112,34 +113,37 @@ class GameAlgo extends React.Component {
   restartGame() {
     console.log("restart game");
     //TODO: display the loosing last card before restarting game
-    return <Board />
+    return <Board />;
   }
+
   render() {
     if (!this.state.isLoad) {
-        return (
-          <div className="tableBox">
-            <div>
-              <Dealer
-                dealerCards={this.state.dealerCards}
-                DealerSum={this.state.DealerSum}
-              />
-            </div>
-            <div>
-              <Player
-                playerCards={this.state.playerCards}
-                playerSum={this.state.playerSum}
-              />
-            </div>
-            <div>
-              <Options 
-                stand={() => this.stand()}
-                hit={() => this.hitCard()} 
-                playerFinish={this.state.playerFinish}
-                />
-            </div>
+      return (
+        <div className="tableBox">
+          <div>
+            <Dealer
+              dealerCards={this.state.dealerCards}
+              DealerSum={this.state.DealerSum}
+              playerFinish={this.state.playerFinish}
+            />
           </div>
-        );
-      } else {
+          <div>
+            <Player
+              playerCards={this.state.playerCards}
+              playerSum={this.state.playerSum}
+            />
+          </div>
+          <div>
+            <Options
+              stand={() => this.stand()}
+              hit={() => this.hitCard()}
+              render={() => this.restartGame}
+              playerFinish={this.state.playerFinish}
+            />
+          </div>
+        </div>
+      );
+    } else {
       return (
         <div>
           <img className="loading" src="img/loadingGif.gif" alt="loading..." />
