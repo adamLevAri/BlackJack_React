@@ -2,30 +2,33 @@ import React from "react";
 import Options from "./Options";
 import Dealer from "./Dealer";
 import Player from "./Player";
-import Board from "./Board";
+import Loading from "./Loading";
 
 class GameAlgo extends React.Component {
   constructor() {
     super();
     this.state = {
-      isLoad: true,
+      LoadAPI: false,
       playerFinish: false,
-      DealerSum: null,
+      dealerSum: 0,
       playerSum: 0,
       playerCards: [],
       dealerCards: []
     };
-    this.restartGame = this.restartGame.bind(this);
   }
 
   componentDidMount() {
-    // this.setState({ isLoad: true });
+    console.log("didmount");
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
   }
 
   fetchCards(cardHolder, cardsAmount) {
-    fetch(`https://deckofcardsapi.com/api/deck/new/draw/?count=${cardsAmount}`)
+    fetch(
+      `https://deckofcardsapi.com/api/deck/${
+        this.props.id
+      }/draw/?count=${cardsAmount}`
+    )
       .then(response => response.json())
       .then(data => {
         if (cardHolder === "player") {
@@ -36,18 +39,18 @@ class GameAlgo extends React.Component {
           //dealer
           this.dealerDeck(data);
           this.countSum("dealer");
-          this.setState({ isLoad: false });
+          this.setState({ LoadAPI: true });
         }
       });
   }
+  //Loads dealer card deck
   dealerDeck(NewCards) {
-    //return: dealer API obj
     this.setState({
       dealerCards: [...this.state.dealerCards, ...NewCards.cards]
     });
   }
+  //Loads player card deck
   playerDeck(NewCards) {
-    //return: player API obj
     this.setState({
       playerCards: [...this.state.playerCards, ...NewCards.cards]
     });
@@ -61,69 +64,60 @@ class GameAlgo extends React.Component {
         let val = this.cardValue(stVal);
         sum += val;
       }
-    } else {
+      this.setState({ playerSum: sum });
+    } else if (type === "dealer") {
       for (let item in this.state.dealerCards) {
         let stVal = this.state.dealerCards[item].value;
         let val = this.cardValue(stVal);
         sum += val;
       }
-    }
-
-    if (type === "player") {
-      this.setState(
-        {
-          playerSum: sum
-        },
-        () => {
-          console.log(this.state.playerSum);
-          if (this.state.playerSum > 21) {
-            this.restartGame();
-          } else if (this.state.playerSum === 21) {
-          } else {
-            console.log("keep playing");
-          }
-        }
-      );
-    } else {
-      this.setState({
-        DealerSum: sum
-      });
+      this.setState({ dealerSum: sum });
     }
   }
 
   cardValue(string) {
+    console.log(string);
     let val = parseInt(string, 10);
     if (val < 11) return val;
     //need to check the ACE value
     return 10;
   }
-
-  hitCard() {
-    console.log("player requested hit");
-    this.fetchCards("player", 1);
-  }
-
-  stand() {
-    console.log("player stand");
+  //Toggles
+  playerFinishToggle() {
     this.setState({
       playerFinish: true
     });
   }
+  win_loseToggle() {
+    let playerSum = this.state.playerSum;
 
-  restartGame() {
-    console.log("restart game");
-    //TODO: display the loosing last card before restarting game
-    return <Board />;
+    if (playerSum > 21) {
+      this.playerFinishToggle();
+      console.log("no more cards!");
+    } else if (playerSum === 21) {
+      this.playerFinishToggle();
+      console.log("Winner!");
+    }
   }
+  // click-Action
+  hitCard() {
+    console.log("player requested hit");
+    if (this.state.playerSum < 21) this.fetchCards("player", 1);
+  }
+  stand() {
+    console.log("player stand");
+    this.playerFinishToggle();
+  }
+  split() {}
 
   render() {
-    if (!this.state.isLoad) {
+    if (this.state.LoadAPI) {
       return (
         <div className="tableBox">
           <div>
             <Dealer
               dealerCards={this.state.dealerCards}
-              DealerSum={this.state.DealerSum}
+              dealerSum={this.state.dealerSum}
               playerFinish={this.state.playerFinish}
             />
           </div>
@@ -137,18 +131,13 @@ class GameAlgo extends React.Component {
             <Options
               stand={() => this.stand()}
               hit={() => this.hitCard()}
-              render={() => this.restartGame}
               playerFinish={this.state.playerFinish}
             />
           </div>
         </div>
       );
     } else {
-      return (
-        <div>
-          <img className="loading" src="img/loadingGif.gif" alt="loading..." />
-        </div>
-      );
+      return <Loading />;
     }
   }
 }

@@ -2,15 +2,19 @@ import React from "react";
 import Cardview from "./Cardview";
 
 class Player extends React.Component {
+  /*
   DealerCards = props => {
-    let cards = "Undefined";
+    let firstCard = "Undefined";
+    let backCard ="Undefined";
+    
     if (this.props.playerFinish) {
-      cards = this.props.dealerCards.map((item, i) => {
+      console.log(this.props.dealerCards)
+      firstCard = this.props.dealerCards.map((item, i) => {
         return <Cardview key={i ^ 2} cardURL={item.image} />;
       });
     } else {
-      cards = <Cardview key={0} cardURL={this.props.dealerCards[0].image} />;
-      let backCard = (
+      firstCard = <Cardview key={0} cardURL={this.props.dealerCards[0].image} />;
+      backCard = (
         <img
           key={1}
           className="cardBox"
@@ -18,16 +22,32 @@ class Player extends React.Component {
           alt="back_card"
         />
       );
-      return [cards, backCard];
+      return [firstCard, backCard];
     }
 
     return (
       <div>
+        <div> {this.firstCard} </div>
         <div> {this.backCard} </div>
-        <div> {this.cards} </div>
       </div>
     );
   };
+*/
+
+  showCards(props) {
+    let backCard = "Undefined";
+    let firstCard = (
+      <Cardview key={0} cardURL={this.props.dealerCards[0].image} />
+    );
+
+    if (!this.props.playerFinish) {
+      backCard = <Cardview key={1} cardURL="img/backCardImg.jpg" />;
+    } else {
+      backCard = <Cardview key={1} cardURL={this.props.dealerCards[1].image} />;
+    }
+
+    return [firstCard, backCard];
+  }
 
   render() {
     return (
@@ -35,8 +55,8 @@ class Player extends React.Component {
         <h1> Dealer </h1>
         <div className="deckBox">
           <div>
-            <div>{this.DealerCards()}</div>
-            <h3>{this.props.DealerSum}</h3>
+            <div>{this.showCards()}</div>
+            <h3>{this.props.dealerSum}</h3>
           </div>
         </div>
       </div>

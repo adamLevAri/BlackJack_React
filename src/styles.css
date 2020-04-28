@@ -56,7 +56,7 @@ img.cardBox {
 }
 
 img.loading {
-  width: 20%;
+  width: 10%;
   margin-left: auto;
   margin-left: auto;
 }
@@ -72,7 +72,7 @@ img.loading {
 button.optionButton {
   margin: 1em 0.5em;
   background: linear-gradient(#38aa25, #063905);
-  border: 5px solid #f3aa1d;
+  border: 3px solid #f3aa1d;
   border-radius: 1000px;
   box-shadow: 0 -5px black;
   color: #ffffff;
@@ -80,6 +80,10 @@ button.optionButton {
   width: 75px;
   height: 40px;
   outline: none;
+}
+
+button:disabled {
+  border: 3px solid #fde9c1;
 }
 .optionButton:hover {
   background-color: #204921;
