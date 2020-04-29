@@ -43,7 +43,10 @@ class Player extends React.Component {
     if (!this.props.playerFinish) {
       backCard = <Cardview key={1} cardURL="img/backCardImg.jpg" />;
     } else {
-      backCard = <Cardview key={1} cardURL={this.props.dealerCards[1].image} />;
+      firstCard = "";
+      backCard = this.props.dealerCards.map((item, i) => {
+        return <Cardview key={i} cardURL={item.image} />;
+      });
     }
 
     return [firstCard, backCard];
@@ -54,10 +57,8 @@ class Player extends React.Component {
       <div>
         <h1> Dealer </h1>
         <div className="deckBox">
-          <div>
-            <div>{this.showCards()}</div>
-            <h3>{this.props.dealerSum}</h3>
-          </div>
+          <div className="sumCircle">{this.props.dealerSum}</div>
+          {this.showCards()}
         </div>
       </div>
     );

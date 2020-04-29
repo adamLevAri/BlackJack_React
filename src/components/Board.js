@@ -11,7 +11,6 @@ class Board extends React.Component {
   }
   //Fetch a decl of 6 cards with unique deck_id
   componentDidMount() {
-    console.log("didfirst");
     fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6`)
       .then(response => response.json())
       .then(deckAPI => {

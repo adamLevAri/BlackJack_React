@@ -7,11 +7,13 @@ class Menu extends React.Component {
       <div className="App">
         <div className="tableBox">
           <h1>BlackJack</h1>
-          <Link to="/Board">
-            <div>
-              <button className="optionButton">Play</button>
-            </div>
-          </Link>
+          <div className="tableBoxIntro">
+            <Link to="/Board">
+              <div>
+                <button className="optionButton">Play</button>
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     );

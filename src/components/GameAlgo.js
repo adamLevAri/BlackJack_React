@@ -18,11 +18,9 @@ class GameAlgo extends React.Component {
   }
 
   componentDidMount() {
-    console.log("didmount");
     this.fetchCards("player", this.props.amount);
     this.fetchCards("dealer", this.props.amount);
   }
-
   fetchCards(cardHolder, cardsAmount) {
     fetch(
       `https://deckofcardsapi.com/api/deck/${
@@ -43,6 +41,7 @@ class GameAlgo extends React.Component {
         }
       });
   }
+
   //Loads dealer card deck
   dealerDeck(NewCards) {
     this.setState({
@@ -56,6 +55,10 @@ class GameAlgo extends React.Component {
     });
   }
 
+  dealerTurn() {
+    if (this.state.dealerSum <= 17) this.fetchCards("dealer", 1);
+  }
+
   countSum(type) {
     let sum = 0;
     if (type === "player") {
@@ -64,7 +67,9 @@ class GameAlgo extends React.Component {
         let val = this.cardValue(stVal);
         sum += val;
       }
-      this.setState({ playerSum: sum });
+      this.setState({ playerSum: sum }, () => {
+        this.playerToggleController();
+      });
     } else if (type === "dealer") {
       for (let item in this.state.dealerCards) {
         let stVal = this.state.dealerCards[item].value;
@@ -76,7 +81,6 @@ class GameAlgo extends React.Component {
   }
 
   cardValue(string) {
-    console.log(string);
     let val = parseInt(string, 10);
     if (val < 11) return val;
     //need to check the ACE value
@@ -84,16 +88,30 @@ class GameAlgo extends React.Component {
   }
   //Toggles
   playerFinishToggle() {
-    this.setState({
-      playerFinish: true
-    });
+    this.setState(
+      {
+        playerFinish: true
+      },
+      () => {
+        this.dealerTurn();
+      }
+    );
   }
-  win_loseToggle() {
+  dealerToggleController() {
+    let dealerSum = this.state.dealerSum;
+
+    if (dealerSum >= 17) {
+      console.log("dealer finished playing");
+    } else if (dealerSum === 21) {
+      console.log("House Win!");
+    } else console.log("House Lose!");
+  }
+  playerToggleController() {
     let playerSum = this.state.playerSum;
 
     if (playerSum > 21) {
       this.playerFinishToggle();
-      console.log("no more cards!");
+      console.log("Loses!");
     } else if (playerSum === 21) {
       this.playerFinishToggle();
       console.log("Winner!");
@@ -112,6 +130,7 @@ class GameAlgo extends React.Component {
 
   render() {
     if (this.state.LoadAPI) {
+      console.log(this.state);
       return (
         <div className="tableBox">
           <div>

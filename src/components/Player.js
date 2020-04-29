@@ -23,7 +23,7 @@ class Player extends React.Component {
 
   // }
 
-  viewPlayer = () => {
+  showCards = () => {
     let cards = this.props.playerCards.map((item, i) => {
       return <Cardview type="Player" key={i} cardURL={item.image} />;
     });
@@ -38,11 +38,9 @@ class Player extends React.Component {
       <div>
         <h1> Player </h1>
         <div className="deckBox">
-          <div className="fullCards">
-            <div>{this.viewPlayer()}</div>
-          </div>
+          <div className="sumCircle">{this.props.playerSum}</div>
+          <div>{this.showCards()}</div>
         </div>
-        <h3>{this.props.playerSum}</h3>
       </div>
     );
   }
