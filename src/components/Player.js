@@ -36,7 +36,6 @@ class Player extends React.Component {
   render() {
     return (
       <div>
-        <h1> Player </h1>
         <div className="deckBox">
           <div className="sumCircle">{this.props.playerSum}</div>
           <div>{this.showCards()}</div>

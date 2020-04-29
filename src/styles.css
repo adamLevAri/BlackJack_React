@@ -14,8 +14,20 @@ h3 {
 .App {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   text-align: center;
-  margin-top: 50px;
 }
+.headerBox {
+  width: 60%;
+  min-width: 400px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img.headerImg {
+  display: block;
+  margin: auto;
+  width: 50%;
+}
+
 .sumCircle {
   border-radius: 15px;
   color: beige;
@@ -54,7 +66,7 @@ img.cardBox {
 }
 
 .tableBox {
-  border-width: 5px;
+  border-width: 2px;
   border-style: solid;
   border-color: white;
   border-radius: 17px;
@@ -68,6 +80,7 @@ img.cardBox {
   background-repeat: non-repeat;
   background-size: cover;
 }
+
 img.loading {
   width: 10%;
   margin-left: auto;
@@ -78,8 +91,10 @@ img.loading {
   margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 3em;
-  border-top: 23px inset black;
-  border-radius: 40px 40px 20px 0px;
+  border-top: 23px ridge rgb(43, 23, 0);
+  border-right: 10px groove rgb(43, 23, 0);
+  border-left: 10px ridge rgb(43, 23, 0);
+  border-radius: 40px 40px 20px 20px;
 }
 
 button.optionButton {
