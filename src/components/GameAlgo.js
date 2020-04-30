@@ -40,6 +40,7 @@ class GameAlgo extends React.Component {
           //dealer
           this.dealerDeck(data);
           this.countSum("dealer");
+          // if(this.playerFinish){this.dealerTurn()}
           this.setState({ LoadAPI: true });
         }
       });
@@ -63,7 +64,7 @@ class GameAlgo extends React.Component {
     if (type === "player") {
       for (let item in this.state.playerCards) {
         let stVal = this.state.playerCards[item].value;
-        let val = this.cardValue(stVal);
+        let val = this.cardValue(stVal, type);
         sum += val;
       }
       this.setState({ playerSum: sum }, () => {
@@ -72,17 +73,35 @@ class GameAlgo extends React.Component {
     } else if (type === "dealer") {
       for (let item in this.state.dealerCards) {
         let stVal = this.state.dealerCards[item].value;
-        let val = this.cardValue(stVal);
+        let val = this.cardValue(stVal, type);
         sum += val;
       }
       this.setState({ dealerSum: sum });
     }
   }
 
-  cardValue(string) {
-    let val = parseInt(string, 10);
+  cardValue(cardVal, type) {
+    console.log(cardVal);
+    let val = parseInt(cardVal, 10);
     if (val < 11) return val;
     //need to check the ACE value
+    else if (cardVal === "ACE") {
+      let sum;
+      switch (type) {
+        case "player":
+          sum = this.state.playerSum;
+          if (sum + 11 > 21) return 1;
+          else return 11;
+
+        case "dealer":
+          sum = this.state.dealerSum;
+          if (sum + 11 > 21) return 1;
+          else return 11;
+
+        default:
+          return 11;
+      }
+    }
     return 10;
   }
   //Toggles
@@ -101,7 +120,7 @@ class GameAlgo extends React.Component {
     let dealerSum = this.state.dealerSum;
     let playerSum = this.state.playerSum;
 
-    if (playerSum > 21 || dealerSum > playerSum) {
+    if (playerSum > 21 || dealerSum >= playerSum) {
       //player lost restart game
       this.setState({
         restartGame: true,
@@ -116,13 +135,19 @@ class GameAlgo extends React.Component {
     let dealerSum = this.state.dealerSum;
     let playerSum = this.state.playerSum;
 
+    console.log(dealerSum, playerSum);
+    // while(dealerSum<playerSum){
+
+    //   this.fetchCards("dealer", 1);
+    // }
+
     if (playerSum > 21) {
       console.log("Dealer win!!");
       this.setState({
         restartGame: true,
         winner: "House"
       });
-    } else if (dealerSum > playerSum) {
+    } else if (dealerSum > playerSum && dealerSum < 22) {
       console.log("Dealer win!!");
       this.setState({
         restartGame: true,
@@ -165,7 +190,6 @@ class GameAlgo extends React.Component {
   split() {}
 
   render() {
-    console.log(this.state.restartGame);
     if (!this.state.restartGame) {
       if (this.state.LoadAPI) {
         return (
@@ -201,6 +225,7 @@ class GameAlgo extends React.Component {
           winner={this.state.winner}
           dealerSum={this.state.dealerSum}
           dealerCards={this.state.dealerCards}
+          playerFinish={this.state.playerFinish}
           playerSum={this.state.playerSum}
           playerCards={this.state.playerCards}
         />
