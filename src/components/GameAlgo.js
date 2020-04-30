@@ -3,6 +3,7 @@ import Options from "./Options";
 import Dealer from "./Dealer";
 import Player from "./Player";
 import Loading from "./Loading";
+import PopUp from "./PopUp";
 
 class GameAlgo extends React.Component {
   constructor() {
@@ -10,6 +11,8 @@ class GameAlgo extends React.Component {
     this.state = {
       LoadAPI: false,
       playerFinish: false,
+      restartGame: false,
+      winner: "",
       dealerSum: 0,
       playerSum: 0,
       playerCards: [],
@@ -55,10 +58,6 @@ class GameAlgo extends React.Component {
     });
   }
 
-  dealerTurn() {
-    if (this.state.dealerSum <= 17) this.fetchCards("dealer", 1);
-  }
-
   countSum(type) {
     let sum = 0;
     if (type === "player") {
@@ -94,27 +93,64 @@ class GameAlgo extends React.Component {
       },
       () => {
         this.dealerTurn();
+        this.dealerToggleController();
       }
     );
   }
+  dealerTurn() {
+    let dealerSum = this.state.dealerSum;
+    let playerSum = this.state.playerSum;
+
+    if (playerSum > 21 || dealerSum > playerSum) {
+      //player lost restart game
+      this.setState({
+        restartGame: true,
+        winner: "House"
+      });
+    }
+    //else if (dealerSum <= 17) this.fetchCards("dealer", 1);
+    else if (dealerSum <= 17) this.fetchCards("dealer", 1);
+  }
+
   dealerToggleController() {
     let dealerSum = this.state.dealerSum;
+    let playerSum = this.state.playerSum;
 
-    if (dealerSum >= 17) {
-      console.log("dealer finished playing");
-    } else if (dealerSum === 21) {
-      console.log("House Win!");
-    } else console.log("House Lose!");
+    if (playerSum > 21) {
+      console.log("Dealer win!!");
+      this.setState({
+        restartGame: true,
+        winner: "House"
+      });
+    } else if (dealerSum > playerSum) {
+      console.log("Dealer win!!");
+      this.setState({
+        restartGame: true,
+        winner: "House"
+      });
+    } else if (dealerSum === playerSum) {
+      console.log("no Winners!");
+      this.setState({
+        restartGame: true,
+        winner: "No winners!!"
+      });
+    } else {
+      console.log("House Lose!");
+      this.setState({
+        restartGame: true,
+        winner: "Player"
+      });
+    }
   }
   playerToggleController() {
     let playerSum = this.state.playerSum;
 
     if (playerSum > 21) {
       this.playerFinishToggle();
-      console.log("Loses!");
+      console.log("Player Lost!");
     } else if (playerSum === 21) {
       this.playerFinishToggle();
-      console.log("Winner!");
+      console.log("Player Winner!");
     }
   }
   // click-Action
@@ -129,34 +165,46 @@ class GameAlgo extends React.Component {
   split() {}
 
   render() {
-    if (this.state.LoadAPI) {
-      console.log(this.state);
-      return (
-        <div className="tableBox">
-          <div>
-            <Dealer
-              dealerCards={this.state.dealerCards}
-              dealerSum={this.state.dealerSum}
-              playerFinish={this.state.playerFinish}
-            />
+    console.log(this.state.restartGame);
+    if (!this.state.restartGame) {
+      if (this.state.LoadAPI) {
+        return (
+          <div className="tableBox">
+            <div>
+              <Dealer
+                dealerCards={this.state.dealerCards}
+                dealerSum={this.state.dealerSum}
+                playerFinish={this.state.playerFinish}
+              />
+            </div>
+            <div>
+              <Player
+                playerCards={this.state.playerCards}
+                playerSum={this.state.playerSum}
+              />
+            </div>
+            <div>
+              <Options
+                stand={() => this.stand()}
+                hit={() => this.hitCard()}
+                playerFinish={this.state.playerFinish}
+              />
+            </div>
           </div>
-          <div>
-            <Player
-              playerCards={this.state.playerCards}
-              playerSum={this.state.playerSum}
-            />
-          </div>
-          <div>
-            <Options
-              stand={() => this.stand()}
-              hit={() => this.hitCard()}
-              playerFinish={this.state.playerFinish}
-            />
-          </div>
-        </div>
-      );
+        );
+      } else {
+        return <Loading />;
+      }
     } else {
-      return <Loading />;
+      return (
+        <PopUp
+          winner={this.state.winner}
+          dealerSum={this.state.dealerSum}
+          dealerCards={this.state.dealerCards}
+          playerSum={this.state.playerSum}
+          playerCards={this.state.playerCards}
+        />
+      );
     }
   }
 }

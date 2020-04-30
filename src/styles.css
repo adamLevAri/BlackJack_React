@@ -121,3 +121,7 @@ button:disabled {
   transform: translateY(-4px);
   outline: none;
 }
+.popupBox {
+  border: 5px solid rgba(141, 162, 164, 0.4);
+  border-radius: 15px;
+}
