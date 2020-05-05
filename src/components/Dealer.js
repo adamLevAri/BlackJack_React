@@ -2,35 +2,39 @@ import React from "react";
 import Cardview from "./Cardview";
 
 class Player extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      DealerSum: this.props.DealerSum,
-      dealerCards: this.props.dealerCards
-    };
-  }
+  showCards(props) {
+    let backCard = "Undefined";
+    let firstCard = (
+      <Cardview key={0} cardURL={this.props.dealerCards[0].image} />
+    );
 
-  DealerCards = () => {
-    let cards = this.state.dealerCards.map((item, i) => {
-      return <Cardview key={i ^ 2} cardURL={item.image} />;
-    });
-    return <div>{cards}</div>;
-  };
+    if (!this.props.playerFinish) {
+      backCard = <Cardview key={1} cardURL="img/backCardImg.jpg" />;
+    } else {
+      firstCard = "";
+      backCard = this.props.dealerCards.map((item, i) => {
+        return <Cardview key={i} cardURL={item.image} />;
+      });
+    }
+
+    return [firstCard, backCard];
+  }
 
   render() {
     return (
       <div>
-        <h1> Dealer </h1>
         <div className="deckBox">
-          <div className="fullCards">
-            <div>{this.DealerCards()}</div>
-            <img
-              className="cardBox"
-              src="img/backCardImg.jpg"
-              alt="back card"
-            />
+          <div
+            className="sumCircle"
+            style={
+              this.props.playerFinish
+                ? { display: "block" }
+                : { display: "none" }
+            }
+          >
+            {this.props.dealerSum}
           </div>
-          <h3>{this.state.DealerSum}</h3>
+          {this.showCards()}
         </div>
       </div>
     );

@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import "./styles.css";
-import Board from "./components/Board";
+import { BrowserRouter } from "react-router-dom";
+
+import Routes from "./routes";
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Board />
-      </div>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
     );
   }
 }

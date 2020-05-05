@@ -4,13 +4,18 @@ class Options extends React.Component {
   render() {
     return (
       <div className="playerOptionBox">
-        <button onClick={this.props.hit} className="optionButton">
+        
+        <button disabled={this.props.playerFinish} onClick={this.props.hit} className="optionButton">
           {" "}
           Hit{" "}
         </button>
-        <button onClick={this.props.stand} className="optionButton">
+        <button disabled={this.props.playerFinish} onClick={this.props.stand} className="optionButton">
           {" "}
-          Stay{" "}
+          Stand{" "}
+        </button>
+        <button disabled={this.props.playerFinish} onClick={this.props.render} className="optionButton">
+          {" "}
+          Split{" "}
         </button>
       </div>
     );
